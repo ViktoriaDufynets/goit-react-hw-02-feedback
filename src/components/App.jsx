@@ -1,6 +1,9 @@
 import { Component } from 'react';
-// import { Feedback } from "./Feedback/Feedback";
-// import { Statistics } from "./Statistics/Statistics";
+import Feedback from './Feedback/Feedback';
+import Statistics  from "./Statistics/Statistics";
+import Section from './Section/Section';
+import Notification from './Notification/Notification';
+import css from './App.module.css';
 
 class App extends Component {
   state = {
@@ -8,48 +11,53 @@ class App extends Component {
     neutral: 0,
     bad: 0,
   };
-  handleGoodFeedback = () => {
-    this.setState(prevState => {
-      return {
-        good: prevState.good + 1,
-      };
-    });
+  handleFeedback = (event) => {
+    const option = event.target.name;
+    this.setState(prevState => ({ [option]: prevState[option] + 1 }));
   };
-  handleNeutralFeedback = () => {
-    this.setState(prevState => {
-      return {
-        neutral: prevState.neutral + 1,
-      };
-    });
-  };
-  handleBadFeedback = () => {
-    this.setState(prevState => {
-      return {
-        bad: prevState.bad + 1,
-      };
-    });
-  };
+
   countTotalFeedback = () => {
      const total = this.state.good + this.state.neutral + this.state.bad;
      return total;
   };
+  countPositiveFeedbackPercentage = () => {
+    const totalFeedback = this.countTotalFeedback();
+    const goodFeedback = this.state.good;
+    let result = 0;
+    if (totalFeedback > 0) {
+      result = Math.ceil((goodFeedback / totalFeedback) * 100);
+    }
+
+    return result;
+ };
 
   render() {
+    const options = Object.keys(this.state);
+    const handleFeedback = this.handleFeedback;
     return (
-    <div>
-      <h2>PLEASE LEAVE FEEDBACK</h2>
-        <ul>
-          <li><button onClick={this.handleGoodFeedback}>Good</button></li>
-          <li><button onClick={this.handleNeutralFeedback}>Neutral</button></li>
-          <li><button onClick={this.handleBadFeedback}>Bad</button></li>
-        </ul>
-        <div>Total: {this.countTotalFeedback}</div>
-     <h2>Statistics</h2>
-        <ul className="">
-          <li><p>Good: {this.state.good}</p></li>
-          <li><p>Neutral: {this.state.neutral}</p></li>
-          <li><p>Bad: {this.state.bad}</p></li>
-        </ul>
+    <div className={css.container}>
+    <Section title = "Please leave feedback">
+    <Feedback
+      options={options}
+      onLeaveFeedback={handleFeedback}
+    />
+    </Section>
+
+    <Section title = "Statistics">
+    {this.countTotalFeedback() > 0 ? (
+      <Statistics
+      good = {this.state.good}
+      neutral = {this.state.neutral}
+      bad = {this.state.bad}
+      total = {this.countTotalFeedback()}
+      percentage = {this.countPositiveFeedbackPercentage()}
+      />
+
+      
+    ) : (
+      <Notification message = "There is no feedback"/>
+    )} 
+    </Section>
     </div>
     )
   }

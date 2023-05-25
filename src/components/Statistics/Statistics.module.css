@@ -1,0 +1,11 @@
+.stats {
+    list-style: none;
+    text-align: left;
+    color: #686f6e;
+    padding-left: 70px;
+}
+
+.stat {
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
