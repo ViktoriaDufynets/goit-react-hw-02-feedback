@@ -9,7 +9,9 @@ const Feedback = ({ options, onLeaveFeedback }) => {
       <button className={css.button} name={option} onClick={onLeaveFeedback}>{option}</button>
       </li>
       ))}
-    </ul>  
+      <canvas className={css.confetti}></canvas>
+    </ul>
+ 
 )}
 
 Feedback.propTypes = {
